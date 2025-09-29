@@ -1,1 +1,2 @@
-# AI_Agents_crash_course
+# AI Agents Email Crash-Course
+
