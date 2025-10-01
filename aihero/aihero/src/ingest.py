@@ -7,6 +7,7 @@ import logging
 from tqdm import tqdm
 from minsearch import Index
 
+
 def read_repo_data(repo_owner, repo_name, branch="main"):
     """
     Download and parse all markdown files from a GitHub repository.
@@ -22,7 +23,8 @@ def read_repo_data(repo_owner, repo_name, branch="main"):
 
     if resp.status_code == 404 and branch == "main":
         # Try fallback to master
-        return read_repo_data(repo_owner, repo_name, branch="master")
+        yield from read_repo_data(repo_owner, repo_name, branch="master")
+        return
 
     if resp.status_code != 200:
         raise Exception(f"Failed to download repository: HTTP {resp.status_code}")
@@ -48,6 +50,7 @@ def read_repo_data(repo_owner, repo_name, branch="main"):
                 logging.warning("Error processing %s: %s", filename, e)
                 continue
 
+
 def sliding_window(seq, size, step):
     """Yield overlapping chunks from a long string."""
     if size <= 0 or step <= 0:
@@ -58,7 +61,21 @@ def sliding_window(seq, size, step):
         if i + size >= n:
             break
 
+
 def ingest_repo(owner, repo, branch="main", chunk_size=2000, step=1000):
+    """
+    Download repository and create text chunks.
+    
+    Args:
+        owner: GitHub username/organization
+        repo: Repository name
+        branch: Branch name (default: main)
+        chunk_size: Size of each chunk in characters
+        step: Step size for sliding window (overlap = chunk_size - step)
+    
+    Returns:
+        List of chunk dictionaries
+    """
     chunks = []
     for doc in tqdm(read_repo_data(owner, repo, branch), desc="Processing files"):
         doc_copy = doc.copy()
@@ -68,7 +85,17 @@ def ingest_repo(owner, repo, branch="main", chunk_size=2000, step=1000):
             chunks.append(chunk)
     return chunks
 
+
 def build_text_index(chunks):
+    """
+    Build a text search index from chunks.
+    
+    Args:
+        chunks: List of chunk dictionaries
+    
+    Returns:
+        minsearch.Index object
+    """
     index = Index(
         text_fields=["chunk", "title", "description", "filename"],
         keyword_fields=[]
