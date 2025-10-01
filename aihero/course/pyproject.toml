@@ -1,0 +1,21 @@
+[project]
+name = "course"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "ipykernel>=6.30.1",
+    "minsearch>=0.0.5",
+    "notebook>=7.4.5",
+    "openai>=1.109.1",
+    "pip>=25.2",
+    "pydantic-ai>=1.0.10",
+    "sentence-transformers>=5.1.1",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
