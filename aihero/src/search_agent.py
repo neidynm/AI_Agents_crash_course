@@ -2,6 +2,8 @@ import os
 from openai import OpenAI
 from sentence_transformers import SentenceTransformer
 from search_tools import hybrid_search
+from dotenv import load_dotenv
+load_dotenv()  # loads .env into environment variables
 
 # Setup OpenAI client for OpenRouter
 openai_client = OpenAI(

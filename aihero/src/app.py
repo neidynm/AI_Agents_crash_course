@@ -5,6 +5,9 @@ from openai import OpenAI
 import sys
 from pathlib import Path
 
+# Load environment variables
+load_dotenv()
+
 # Add src directory to path
 src_path = Path(__file__).parent
 sys.path.insert(0, str(src_path))
@@ -14,8 +17,6 @@ from search_tools import create_embeddings, VectorSearch, hybrid_search
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# Load environment variables
-load_dotenv()
 
 # --- Configure Streamlit ---
 st.set_page_config(page_title="FAQ Agent", page_icon="🤖", layout="centered")
